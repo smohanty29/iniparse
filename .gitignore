@@ -7,3 +7,5 @@ pkg/*
 *.gem
 rdoc
 Gemfile.lock
+*.sublime-project
+*.sublime-workspace
