@@ -36,12 +36,8 @@ module IniParse
   # IniParse::Document
   #
   def parse(source, opt={})
-    # if opt.present? && opt[:tlc]
-    #   IniParse::Parser.new(source.gsub(/(?<!\\)\n\\[*\s]/, '')).parse # for tlc style continuation after newline
-    # else
-    #   IniParse::Parser.new(source.gsub(/(?<!\\)\\\n/, '')).parse # normal continuation lines
-    # end
-    IniParse::Parser.new(source.gsub(/(?<!\\)\n\\[*\s]/, '').gsub(/(?<!\\)\\\n/, '')).parse # handle both, no need for options
+    # first do the tlc type and then do the usual if still present
+    IniParse::Parser.new(source.gsub(/(?<!\\)\n\\[*\s]/, '').gsub(/(?<!\\)\\\n/, '')).parse # handle both TLC and usual, no need for options
   end
 
   # Opens the file at +path+, reads and parses it's contents.
