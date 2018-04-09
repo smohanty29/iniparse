@@ -1,2 +1,2 @@
 ---
-BUNDLE_WITHOUT: extras
+BUNDLE_WITHOUT: "extras"

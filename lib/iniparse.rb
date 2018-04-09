@@ -35,8 +35,8 @@ module IniParse
   # ==== Returns
   # IniParse::Document
   #
-  def parse(source, opt={})
-    # first do the tlc type and then do the usual if still present
+  def parse(source)
+    # first do the tlc type line continuation and then do the usual if still present
     IniParse::Parser.new(source.gsub(/(?<!\\)\n\\[*\s]/, '').gsub(/(?<!\\)\\\n/, '')).parse # handle both TLC and usual, no need for options
   end
 

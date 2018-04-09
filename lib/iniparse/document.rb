@@ -50,8 +50,8 @@ module IniParse
     end
 
     # Returns this document as a string suitable for saving to a file.
-    def to_ini
-      string = @lines.to_a.map { |line| line.to_ini }.join($/)
+    def to_ini(opts={})
+      string = @lines.to_a.map { |line| line.to_ini(opts)}.join($/)
       string = "#{ string }\n" unless string[-1] == "\n"
 
       string

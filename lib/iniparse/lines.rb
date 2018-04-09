@@ -21,14 +21,14 @@ module IniParse
 
       # Returns this line as a string as it would be represented in an INI
       # document.
-      def to_ini
+      def to_ini(opts={})
         [*line_contents].map { |ini|
             if has_comment?
               ini += ' ' if ini =~ /\S/ # not blank
               ini  = ini.ljust(@comment_offset)
               ini += comment
             end
-            @indent + ini
+            @indent + wrap_line(ini, opts)
           }.join "\n"
       end
 
@@ -59,6 +59,15 @@ module IniParse
           option_sep: @option_sep
         }
       end
+
+      def wrap_line(content, opts={})
+        lim = opts[:line_limit]
+        return content unless lim.is_a?(Integer) && (content.size >= lim)
+
+        content[0..lim-2] + "\n" + "\\ " +
+        (content[lim-1..-1]).scan(/.{1,#{lim-2}}/).join("\n\\ ")
+      end
+
     end
 
     # Represents a section header in an INI document. Section headers consist
@@ -100,19 +109,19 @@ module IniParse
 
       # Returns this line as a string as it would be represented in an INI
       # document. Includes options, comments and blanks.
-      def to_ini
+      def to_ini(opts={})
         coll = lines.to_a
 
         if coll.any?
           [*super,coll.to_a.map do |line|
             if line.kind_of?(Array)
-              line.map { |dup_line| dup_line.to_ini }.join($/)
+              line.map { |dup_line| dup_line.to_ini(opts) }.join($/)
             else
-              line.to_ini
+              line.to_ini(opts)
             end
           end].join($/)
         else
-          super
+          super(opts)
         end
       end
 
@@ -227,7 +236,7 @@ module IniParse
         super('__anonymous__')
       end
 
-      def to_ini
+      def to_ini(opts={})
         # Remove the leading space which is added by joining the blank line
         # content with the options.
         super.gsub(/\A\n/, '')
